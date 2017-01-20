@@ -55,7 +55,7 @@ public class SignatureAuthenticationProvider implements AuthenticationProvider {
     }
 
     private String calculateHMAC(String secret, String data) {
-        byte[] rawHmac = HmacUtils.hmacSha1(secret.getBytes(), data.getBytes());
+        byte[] rawHmac = HmacUtils.hmacSha256(secret.getBytes(), data.getBytes());
         return Base64.encodeBase64String(rawHmac);
     }
 }
