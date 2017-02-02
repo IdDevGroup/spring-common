@@ -1,5 +1,6 @@
 package io.identifid.common.spring.security.signature;
 
+import io.identifid.common.spring.security.AuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.Collection;
@@ -8,7 +9,7 @@ import java.util.Date;
 /**
  * Created by mdeterman on 11/10/16.
  */
-public class SignatureAuthenticationToken extends UsernamePasswordAuthenticationToken {
+public class SignatureAuthenticationToken extends AuthenticationToken {
 
     private Date timestamp;
 

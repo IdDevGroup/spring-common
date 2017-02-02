@@ -1,5 +1,7 @@
 package io.identifid.common.spring.security.signature;
 
+import io.identifid.common.spring.security.Details;
+import io.identifid.common.spring.security.DetailsService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,9 +16,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class SignatureAuthenticationProvider implements AuthenticationProvider {
 
-    private SignatureDetailsService service;
+    private DetailsService service;
 
-    public SignatureAuthenticationProvider(SignatureDetailsService service) {
+    public SignatureAuthenticationProvider(DetailsService service) {
         this.service = service;
     }
 
@@ -28,10 +30,10 @@ public class SignatureAuthenticationProvider implements AuthenticationProvider {
         // hashed blob
         SignatureCredentials credentials = token.getCredentials();
 
-        SignatureDetails application = service.loadByUsername(apiKey);
+        Details details = service.load(apiKey);
 
         // get secret access key from api key
-        String secret = application.getSecretKey();
+        String secret = (String) details.getKey();
 
         // if that username does not exist, throw exception
         if (secret == null) {
@@ -47,7 +49,7 @@ public class SignatureAuthenticationProvider implements AuthenticationProvider {
 
         // this constructor create a new fully authenticated token, with the "authenticated" flag set to true
         // we use null as to indicates that the user has no authorities. you can change it if you need to set some roles.
-        return new SignatureAuthenticationToken(application, credentials, token.getTimestamp(), null);
+        return new SignatureAuthenticationToken(details, credentials, token.getTimestamp(), details.getAuthorities());
     }
 
     public boolean supports(Class<?> authentication) {

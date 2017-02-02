@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 /**
  * Created by mdeterman on 11/10/16.
  */
-public class IdentifidAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
+public class AuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {

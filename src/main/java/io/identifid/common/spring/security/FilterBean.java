@@ -2,6 +2,7 @@ package io.identifid.common.spring.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -19,18 +20,18 @@ import java.io.IOException;
 /**
  * Created by mdeterman on 1/27/17.
  */
-public abstract class IdentifidGenericFilterBean extends GenericFilterBean {
-    private final Logger log = LoggerFactory.getLogger(IdentifidGenericFilterBean.class);
+public abstract class FilterBean extends GenericFilterBean {
+    private final Logger log = LoggerFactory.getLogger(FilterBean.class);
 
     private AuthenticationManager authenticationManager;
     private org.springframework.security.web.AuthenticationEntryPoint authenticationEntryPoint;
 
-    public IdentifidGenericFilterBean(AuthenticationManager authenticationManager) {
+    public FilterBean(AuthenticationManager authenticationManager) {
         this(authenticationManager, new AuthenticationEntryPoint());
         ((AuthenticationEntryPoint)this.authenticationEntryPoint).setRealmName("Secure realm");
     }
 
-    public IdentifidGenericFilterBean(AuthenticationManager authenticationManager, org.springframework.security.web.AuthenticationEntryPoint authenticationEntryPoint) {
+    public FilterBean(AuthenticationManager authenticationManager, org.springframework.security.web.AuthenticationEntryPoint authenticationEntryPoint) {
         this.authenticationManager = authenticationManager;
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
@@ -39,6 +40,12 @@ public abstract class IdentifidGenericFilterBean extends GenericFilterBean {
 
         HttpServletRequest request = getHttpServletRequest(req);
         HttpServletResponse response = getHttpServletResponse(resp);
+
+        if(!hasCredentials(request)) {
+            // make sure we have an anonymous token
+            chain.doFilter(request, response);
+            return;
+        }
 
         // Create an authentication token
         Authentication authentication = attemptAuthentication(request, response);
@@ -62,6 +69,8 @@ public abstract class IdentifidGenericFilterBean extends GenericFilterBean {
 
     protected abstract Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException;
 
+    protected abstract boolean hasCredentials(HttpServletRequest request);
+
     protected HttpServletRequest getHttpServletRequest(ServletRequest request) {
         return (HttpServletRequest) request;
     }
@@ -69,4 +78,6 @@ public abstract class IdentifidGenericFilterBean extends GenericFilterBean {
     protected HttpServletResponse getHttpServletResponse(ServletResponse response) {
         return (HttpServletResponse) response;
     }
+
+
 }

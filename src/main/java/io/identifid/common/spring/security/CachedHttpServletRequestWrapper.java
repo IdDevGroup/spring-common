@@ -1,4 +1,4 @@
-package io.identifid.common.spring.security.signature;
+package io.identifid.common.spring.security;
 
 import org.apache.commons.io.IOUtils;
 
