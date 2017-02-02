@@ -1,4 +1,4 @@
-package io.identifid.common.spring.security.signature;
+package io.identifid.common.spring.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 /**
  * Created by mdeterman on 11/10/16.
  */
-public class SignatureAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
+public class IdentifidAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
