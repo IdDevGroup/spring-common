@@ -3,7 +3,7 @@ podTemplate(label: 'spring-common', containers: [
 ]) {
 
     node('spring-common') {
-        stage("Checkout project") {
+        stage("SCM Checkout") {
             checkout(
                     [
                             $class: 'GitSCM',
@@ -25,18 +25,16 @@ podTemplate(label: 'spring-common', containers: [
             )
         }
 
-        stage('Get a Maven project') {
+        stage('MVN Install') {
             container('maven') {
                 stage('Build a Maven project') {
                     sh 'mvn clean install'
                 }
             }
         }
-        // post {
-        //     always {
-        //         archive "target/**/*"
-        //         junit 'target/surefire-reports/*.xml'
-        //     }
-        // }
+
+        stage("Archive Artifacts") {
+            archiveArtifacts 'target/*.jar'
+        }
     }
 }
