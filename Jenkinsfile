@@ -3,37 +3,43 @@ podTemplate(label: 'spring-common', containers: [
 ]) {
 
     node('spring-common') {
-        stage("SCM Checkout") {
-            checkout(
-                    [
-                            $class: 'GitSCM',
-                            branches: [
-                                    [
-                                            name: '*/master'
-                                    ]
-                            ],
-                            doGenerateSubmoduleConfigurations: false,
-                            extensions: [],
-                            submoduleCfg: [],
-                            userRemoteConfigs: [
-                                    [
-                                            credentialsId: 'github-ssh',
-                                            url: 'git@github.com:IdDevGroup/spring-common.git'
-                                    ]
-                            ]
-                    ]
-            )
+        stage("Checkout") {
+            checkout scm
+
+//            checkout(
+//                    [
+//                            $class: 'GitSCM',
+//                            branches: [
+//                                    [
+//                                            name: '*/master'
+//                                    ]
+//                            ],
+//                            doGenerateSubmoduleConfigurations: false,
+//                            extensions: [],
+//                            submoduleCfg: [],
+//                            userRemoteConfigs: [
+//                                    [
+//                                            credentialsId: 'github-ssh',
+//                                            url: 'git@github.com:IdDevGroup/spring-common.git'
+//                                    ]
+//                            ]
+//                    ]
+//            )
         }
 
-        stage('MVN Install') {
+        stage('Package') {
             container('maven') {
                 stage('Build a Maven project') {
-                    sh 'mvn clean install'
+                    sh 'mvn clean package'
+                }
+
+                stage('Build a Maven project') {
+                    sh 'mvn clean package'
                 }
             }
         }
 
-        stage("Archive Artifacts") {
+        stage("Archive") {
             archiveArtifacts 'target/*.jar'
         }
     }
