@@ -3,29 +3,7 @@ podTemplate(label: 'spring-common', containers: [
 ]) {
 
     node('spring-common') {
-        stage("Checkout") {
-            checkout scm
-
-//            checkout(
-//                    [
-//                            $class: 'GitSCM',
-//                            branches: [
-//                                    [
-//                                            name: '*/master'
-//                                    ]
-//                            ],
-//                            doGenerateSubmoduleConfigurations: false,
-//                            extensions: [],
-//                            submoduleCfg: [],
-//                            userRemoteConfigs: [
-//                                    [
-//                                            credentialsId: 'github-ssh',
-//                                            url: 'git@github.com:IdDevGroup/spring-common.git'
-//                                    ]
-//                            ]
-//                    ]
-//            )
-        }
+        checkout scm
 
         stage('Package') {
             container('maven') {
