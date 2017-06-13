@@ -1,7 +1,12 @@
 #!groovy​
-podTemplate(label: 'spring-common', containers: [
-        containerTemplate(name: 'maven', image: 'maven:alpine', ttyEnabled: true, command: 'cat')
-]) {
+podTemplate(label: 'spring-common',
+        containers: [
+                containerTemplate(name: 'maven', image: 'maven:alpine', ttyEnabled: true, command: 'cat'),
+        ],
+        volumes: [
+                secretVolume(secretName: 'maven-settings', mountPath: '/root/.m2')
+        ]
+) {
 
     node('spring-common') {
         stage('Preparation') {
@@ -10,7 +15,7 @@ podTemplate(label: 'spring-common', containers: [
 
         stage('Build') {
             container('maven') {
-                sh 'mvn clean package'
+                sh 'mvn clean verify'
             }
         }
 
@@ -20,7 +25,9 @@ podTemplate(label: 'spring-common', containers: [
         }
 
         stage('Publish') {
-
+            container('maven') {
+                sh 'mvn deploy -Dmaven.test.skip=true'
+            }
         }
     }
 }
