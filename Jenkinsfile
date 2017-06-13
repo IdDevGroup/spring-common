@@ -15,7 +15,7 @@ podTemplate(label: 'spring-common',
 
         stage('Build') {
             container('maven') {
-                sh 'mvn clean verify'
+                sh 'mvn clean verify --quiet'
             }
         }
 
