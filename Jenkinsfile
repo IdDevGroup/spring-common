@@ -23,6 +23,7 @@ podTemplate(label: 'spring-common',
         container('maven') {
             stage('Build') {
                 sh 'mvn clean verify --quiet'
+                sh 'mvn package -Dmaven.test.skip=true --batch-mode'
             }
 
             stage('Publish') {
