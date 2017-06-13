@@ -1,24 +1,26 @@
+#!groovy​
 podTemplate(label: 'spring-common', containers: [
         containerTemplate(name: 'maven', image: 'maven:latest', ttyEnabled: true, command: 'cat')
 ]) {
 
     node('spring-common') {
-        checkout scm
+        stage('Preparation') {
+            checkout scm
+        }
 
-        stage('Package') {
+        stage('Build') {
             container('maven') {
-                stage('Build a Maven project') {
-                    sh 'mvn clean package'
-                }
-
-                stage('Build a Maven project') {
-                    sh 'mvn clean package'
-                }
+                sh 'mvn clean package'
             }
         }
 
-        stage("Archive") {
-            archiveArtifacts 'target/*.jar'
+        stage("Results") {
+//            junit '**/target/surefire-reports/TEST-*.xml'
+            archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true, allowEmptyArchive: false, onlyIfSuccessful: true;
+        }
+
+        stage('Publish') {
+
         }
     }
 }
