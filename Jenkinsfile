@@ -1,6 +1,6 @@
 #!groovy​
 podTemplate(label: 'spring-common', containers: [
-        containerTemplate(name: 'maven', image: 'maven:latest', ttyEnabled: true, command: 'cat')
+        containerTemplate(name: 'maven', image: 'maven:alpine', ttyEnabled: true, command: 'cat')
 ]) {
 
     node('spring-common') {
